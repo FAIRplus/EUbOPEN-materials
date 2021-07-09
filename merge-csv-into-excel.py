@@ -10,7 +10,6 @@ linecount_total = 0
 for f in filenames:
     print(f"Counting lines in file {f}...")
     file = open(f, "r")
-    line_count = 0
     for line in file:
         linecount_total += 1
     file.close()
