@@ -1,20 +1,19 @@
 import glob
-path = "Reports/Reports"
+path = "hek 0h"
 import os
 os.chdir(path)
 filenames = glob.glob(f"*.csv")
 print(filenames)
 
-import subprocess
-linecount_dict = {}
+print("Counting lines...")
 linecount_total = 0
 for f in filenames:
-    out = ""
-    result = subprocess.run(["wc", "-l", f], stdout=subprocess.PIPE, text=True)
-    linecount = int(result.stdout.strip().split()[0])
-    #linecount_dict.update( { f : linecount } )
-    linecount_total += linecount
-
+    print(f"Counting lines in file {f}...")
+    file = open(f, "r")
+    line_count = 0
+    for line in file:
+        linecount_total += 1
+    file.close()
 
 keys_of_files = [i[:-4] for i in filenames]
 import csv
