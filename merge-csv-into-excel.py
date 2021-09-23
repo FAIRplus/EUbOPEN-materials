@@ -1,6 +1,14 @@
+import csv
+import datetime
 import glob
-path = "hek 0h"
 import os
+
+import openpyxl
+import lxml # actually, the import of lxml is not necessary for the code to work, but is necessary to really enable the write_only function in the next line. If lxml is not present, the memory-optimization effect of write_only does not happen, but openpyxl works as if the write_only flag was not set.
+
+
+path = "hek 0h"
+
 os.chdir(path)
 filenames = glob.glob(f"*.csv")
 print(filenames)
@@ -15,9 +23,8 @@ for f in filenames:
     file.close()
 
 keys_of_files = [i[:-4] for i in filenames]
-import csv
-import openpyxl
-import lxml # actually, the import of lxml is not necessary for the code to work, but is necessary to really enable the write_only function in the next line. If lxml is not present, the memory-optimization effect of write_only does not happen, but openpyxl works as if the write_only flag was not set.
+
+
 wb = openpyxl.Workbook(write_only=True)
 processed_lines = 0
 notify_x_times = 100
@@ -36,8 +43,51 @@ for i, (key, title) in enumerate(zip(keys_of_files, keys_of_files_shortened), st
     reader = csv.reader(f)
 
     ws = wb.create_sheet(title=title)
-    
-    for row in reader:
+   
+    for this_row in reader:
+
+        row = []
+
+        for element in this_row:
+            assert type(element) == str 
+            
+            can_be_int_ed = None
+            can_be_float_ed = None 
+            can_be_datetime_ed = None 
+
+            try:
+                int(element)
+                can_be_int_ed = True
+            except ValueError:
+                can_be_int_ed = False
+            
+            try:
+                float(element)
+                can_be_float_ed = True
+            except ValueError:
+                can_be_float_ed = False
+
+            if "-" in element and ":" in element and ":" in element:
+                try:
+                    datetime.datetime.fromisoformat(element)
+                    can_be_datetime_ed = True 
+                except ValueError:
+                    can_be_datetime_ed = False
+
+            if can_be_int_ed and can_be_float_ed:
+                if str(int(element)) == element:
+                    element = int(element) 
+                else:
+                    element = float(element)
+
+            if can_be_float_ed and not can_be_int_ed:
+                element = float(element)
+            
+            if can_be_datetime_ed:
+                pass
+
+            row.append(element)
+
         ws.append(row)
         processed_lines += 1
 
