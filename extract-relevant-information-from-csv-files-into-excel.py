@@ -1,6 +1,11 @@
 import glob
-path = "hek 0h"
 import os
+
+import pandas
+
+
+path = "hek 0h"
+
 os.chdir(path)
 filenames = glob.glob(f"*Stats*.csv")
 print(filenames)
@@ -13,7 +18,6 @@ keys_of_files_shortened = list( key[:31] for key in keys_of_files )
 if len(set(keys_of_files_shortened)) < len(keys_of_files):
     raise Exception
 
-import pandas
 
 df_collect_all = None
 for i, (filename_basename, filename_shortened) in enumerate(zip(keys_of_files, keys_of_files_shortened), start=1):
@@ -71,6 +75,9 @@ for i, (filename_basename, filename_shortened) in enumerate(zip(keys_of_files, k
     assert not NEW_NAME_OF_RELEVANT_COLUMN in df_collect_all.columns
     df_collect_all[NEW_NAME_OF_RELEVANT_COLUMN] = df_renamed[NEW_NAME_OF_RELEVANT_COLUMN]
     
+
+
+
 
 
 print("Writing the file...")
