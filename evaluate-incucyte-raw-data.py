@@ -5,28 +5,32 @@ import pandas
 FILENAME_OF_RAW_DATA = "incucyte_raw_data/cv001.csv"
 SHEETNAME_OF_COMPOUND_MAP = "compound map Incucyte1"
 FILENAME_OF_META_DATA = "20210920 Overview CG plates and compounds.xlsx"
-sep = SEPARATOR_CHARACTER = ";"
+SEPARATOR_CHARACTER = ";"
+DECIMAL_SEPARATOR   = ","
+
+
+
 
 
 ## quality control
 with open(FILENAME_OF_RAW_DATA) as f:
-    assert f.readline().replace(sep,"") != "\n"
-    assert f.readline().replace(sep,"") == "\n"
+    assert f.readline().replace(SEPARATOR_CHARACTER,"") != "\n"
+    assert f.readline().replace(SEPARATOR_CHARACTER,"") == "\n"
     assert f.readline().split(":")[0] == "Vessel Name"
     assert f.readline().split(":")[0] == "Metric"
     assert f.readline().split(":")[0] == "Cell Type"
     assert f.readline().split(":")[0] == "Passage"
     assert f.readline().split(":")[0] == "Notes"
     assert f.readline().split(":")[0] == "Analysis"
-    assert f.readline().replace(sep,"") == "\n"
-    assert f.readline().replace(sep,"").startswith("Date TimeElapsed")
+    assert f.readline().replace(SEPARATOR_CHARACTER,"") == "\n"
+    assert f.readline().replace(SEPARATOR_CHARACTER,"").startswith("Date TimeElapsed")
     remaining_lines = f.readlines()
     
 
 ## read
-name_of_file = pandas.read_csv(FILENAME_OF_RAW_DATA, nrows=1, names=["name"], usecols=[0])
-metadata     = pandas.read_csv(FILENAME_OF_RAW_DATA, skiprows=2, nrows=6, names=["meta"], usecols=[0])
-df           = pandas.read_csv(FILENAME_OF_RAW_DATA, skiprows=9)
+name_of_file = pandas.read_csv(FILENAME_OF_RAW_DATA, sep=SEPARATOR_CHARACTER, decimal=DECIMAL_SEPARATOR, nrows=1, names=["name"], usecols=[0])
+metadata     = pandas.read_csv(FILENAME_OF_RAW_DATA, sep=SEPARATOR_CHARACTER, decimal=DECIMAL_SEPARATOR, skiprows=2, nrows=6, names=["meta"], usecols=[0])
+df           = pandas.read_csv(FILENAME_OF_RAW_DATA, sep=SEPARATOR_CHARACTER, decimal=DECIMAL_SEPARATOR, skiprows=9)
 
 well_ids_with_data = list([col for col in df.columns if col != "Date Time" and col != "Elapsed"])
 number_of_timepoints = len(df)
