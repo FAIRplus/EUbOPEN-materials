@@ -2,7 +2,7 @@ import glob
 import os
 
 
-import pandas 
+import pandas
 
 WHICH_IMAGING = "CQ1-ctf011-t24"
 DO_I_HAVE_TO_MERGE_FILES_FIRST = True
@@ -178,21 +178,23 @@ for groupname, groupentries in df_imagings.groupby("experiment ID"):
             df[f"{x}1a"] = y["Cell_Count_Cell_Stats_HighIntObj"]          / y["Cell_Count_Cell_Stats"]
             df[f"{x}1b"] = y["Cell_Count_Cell_Stats_Normal"]              / y["Cell_Count_Cell_Stats"]
          
-            df[f"{x}2a"] = y["Cell_Count_Cell_Stats_HealthyNuc"]          / y["Cell_Count_Cell_Stats"]
-            df[f"{x}2b"] = y["Cell_Count_Cell_Stats_FragNuc"]             / y["Cell_Count_Cell_Stats"]
-            df[f"{x}2c"] = y["Cell_Count_Cell_Stats_PyknoNuc"]            / y["Cell_Count_Cell_Stats"]
+            df[f"{x}2a"] = y["Cell_Count_Cell_Stats_HealthyNuc"]          / y["Cell_Count_Cell_Stats_Normal"]
+            df[f"{x}2b"] = y["Cell_Count_Cell_Stats_FragNuc"]             / y["Cell_Count_Cell_Stats_Normal"]
+            df[f"{x}2c"] = y["Cell_Count_Cell_Stats_PyknoNuc"]            / y["Cell_Count_Cell_Stats_Normal"]
          
-            df[f"{x}3a"] = y["Cell_Count_Cell_Stats_mitosis"]             / y["Cell_Count_Cell_Stats"]
-            df[f"{x}3b"] = y["Cell_Count_Cell_Stats_apoptosis"]           / y["Cell_Count_Cell_Stats"]
+            df[f"{x}3a"] = y["Cell_Count_Cell_Stats_mitosis"]             / y["Cell_Count_Cell_Stats_PyknoNuc"]
+            df[f"{x}3b"] = y["Cell_Count_Cell_Stats_apoptosis"]           / y["Cell_Count_Cell_Stats_PyknoNuc"]
 
-            df[f"{x}4a"] = y["Cell_Count_Cell_Stats_membrane intact"]     / y["Cell_Count_Cell_Stats"]
-            df[f"{x}4b"] = y["Cell_Count_Cell_Stats_membrane permeab"]    / y["Cell_Count_Cell_Stats"]
+            df[f"{x}4a"] = y["Cell_Count_Cell_Stats_membrane intact"]     / y["Cell_Count_Cell_Stats_HealthyNuc"]
+            df[f"{x}4b"] = y["Cell_Count_Cell_Stats_membrane permeab"]    / y["Cell_Count_Cell_Stats_HealthyNuc"]
   
-            df[f"{x}5a"] = y["Cell_Count_Cell_Stats_mito mass high"]      / y["Cell_Count_Cell_Stats"]
-            df[f"{x}5b"] = y["Cell_Count_Cell_Stats_mito mass normal"]    / y["Cell_Count_Cell_Stats"]
+            df[f"{x}5a"] = y["Cell_Count_Cell_Stats_mito mass high"]      / y["Cell_Count_Cell_Stats_HealthyNuc"]
+            df[f"{x}5b"] = y["Cell_Count_Cell_Stats_mito mass normal"]    / y["Cell_Count_Cell_Stats_HealthyNuc"]
             
-            df[f"{x}6a"] = y["Cell_Count_Cell_Stats_tubulin effect"]      / y["Cell_Count_Cell_Stats"]
-            df[f"{x}6b"] = y["Cell_Count_Cell_Stats_tubulin normal"]      / y["Cell_Count_Cell_Stats"]
+            df[f"{x}6a"] = y["Cell_Count_Cell_Stats_tubulin effect"]      / y["Cell_Count_Cell_Stats_HealthyNuc"]
+            df[f"{x}6b"] = y["Cell_Count_Cell_Stats_tubulin normal"]      / y["Cell_Count_Cell_Stats_HealthyNuc"]
+
+        df[f"ratio_3a"] = df[f"calc3a"] / df[f"ctrl3a"]
 
 
         df.to_excel(merged_filename + "_evaluated.xlsx", index=False)
